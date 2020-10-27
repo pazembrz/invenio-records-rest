@@ -60,12 +60,12 @@ def test_record_resolution(app, db):
             headers=headers)
         assert res.status_code == 500
 
-        # Redirected invalid endpoint
+        # Redirected invalid endpoint to correct one
         res = client.get(
             url_for('invenio_records_rest.recid_item',
                     pid_value=pid_red_doi.pid_value),
             headers=headers)
-        assert res.status_code == 500
+        assert res.status_code == 301
 
         # Redirected
         res = client.get(
