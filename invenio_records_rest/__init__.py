@@ -236,7 +236,7 @@ for aggregations, but not for search queries.
 To set the aggregations and filters you want you can modify the
 `RECORDS_REST_FACETS`.
 
->>> from .facets import terms_filter
+>>> from invenio_records_rest.facets import terms_filter
 >>> app.config['RECORDS_REST_FACETS'] = {
 ...     'index_name': {
 ...         'aggs': {

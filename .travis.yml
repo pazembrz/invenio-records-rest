@@ -20,8 +20,12 @@ language: python
 matrix:
   fast_finish: true
   allow_failures:
-    - env: REQUIREMENTS=devel EXTRAS=all,elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL
+    - python: 3.6
+      env: REQUIREMENTS=devel EXTRAS=elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL
+    - python: 3.7
+      env: REQUIREMENTS=devel EXTRAS=elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL
     - python: 3.8
+      env: REQUIREMENTS=devel EXTRAS=elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL
 
 cache:
   - pip
@@ -38,11 +42,12 @@ env:
     - ES_HOST=127.0.0.1
     - SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio"
   matrix:
-    - REQUIREMENTS=lowest EXTRAS=all,elasticsearch5 ES_URL=$ES5_DOWNLOAD_URL
-    - REQUIREMENTS=lowest EXTRAS=all,elasticsearch6 ES_URL=$ES6_DOWNLOAD_URL
-    - REQUIREMENTS=release EXTRAS=all,elasticsearch6 ES_URL=$ES6_DOWNLOAD_URL
-    - REQUIREMENTS=release EXTRAS=all,elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL DEPLOY=true
-    - REQUIREMENTS=devel EXTRAS=all,elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL
+    - REQUIREMENTS=lowest EXTRAS=elasticsearch5 ES_URL=$ES5_DOWNLOAD_URL
+    - REQUIREMENTS=lowest EXTRAS=elasticsearch6 ES_URL=$ES6_DOWNLOAD_URL
+    - REQUIREMENTS=release EXTRAS=elasticsearch6 ES_URL=$ES6_DOWNLOAD_URL
+    - REQUIREMENTS=release EXTRAS=elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL DEPLOY=true
+    - REQUIREMENTS=devel EXTRAS=elasticsearch7 ES_URL=$ES7_DOWNLOAD_URL
+
 
 
 python:
@@ -63,7 +68,7 @@ before_install:
 
 install:
   - "travis_retry pip install -r .travis-${REQUIREMENTS}-requirements.txt"
-  - "travis_retry pip install -e .[$EXTRAS]"
+  - "travis_retry pip install -e .[all,$EXTRAS]"
   - "pip freeze"
 
 before_script:
@@ -76,15 +81,3 @@ script:
 
 after_success:
   - coveralls
-
-deploy:
-  provider: pypi
-  user: inveniosoftware
-  password:
-    secure: "EYDHlsJ2JLUuO4bqre5bLliHO3ga/c5gBnIMyyFTMXEjxmRpvZ9JkCYkCEtwD5OIBXEplRdLv19Q2E+yfUDtBtN/BPALiGoHnkH78IfLab0ZmlFYESinI4ChwluS++uYi8dijdzwfVQyjTcrQzwpfHiU8wcUZdX0zBr+G1Zlk7MQWIN03cvlAi0Qxoevj/SJB5aL3q2sw+fjP+zLFap0b94q3lWLLAB3Oivtd7ujMTbRzaFW7XB8pcop7rMTrw7+A3/5bmzvZ4uc82VY44XNEP5/Fb0+jSx5l6c9ndXBQXVeHNgQrxbluaMqISmPhsUug4BfoRpabn9tD5xjjqaXrdZGo6cP0xCzGJJdv205IeJu7cV74A6B2O5pNSpZEu/Hn2aq0BYaYn3TDJ5UbO4rGprH8jqZwhSzL5fQvHeULzTLJfTWw07O9KXapQME9kx1qmZycqj+CA81MeYR1AeoERk9smB+k3Pv9IcFQPvMsgRyB0LhIi8bcygc1BGPWRTA1Qbk2p8/xdqgLjMRy2rsDA/+x3ftflBp0CwFU/UoTVEfGOx+mEapyGw8Tx0pijyU+r1t7jgNWnqEupVlHQq4wof4DFZYFAVuWk24SrHiwuaXS+l+uXtusvBodBa3NWfYdfZyASqREAvnRSIkTfF7J/0DpEkWDLiDU8AhgutvLno="
-  distributions: "compile_catalog sdist bdist_wheel"
-  skip_existing: true
-  on:
-    tags: true
-    python: "3.6"
-
