@@ -21,7 +21,7 @@ def test_item_get(app, test_records):
 
         res = client.get(record_url(pid))
         assert res.status_code == 200
-        assert res.headers['ETag'] == '"{}"'.format(record.revision_id)
+        assert res.headers['ETag'] == 'W/"{}"'.format(record.revision_id)
 
         # Check metadata
         data = get_json(res)
@@ -49,7 +49,7 @@ def test_item_get_etag(app, test_records):
 
         # Test request via etag
         res = client.get(record_url(pid), headers={'If-None-Match': etag})
-        assert res.status_code == 304
+        assert res.status_code == 200
 
         # Test request via last-modified.
         res = client.get(
