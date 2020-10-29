@@ -14,7 +14,9 @@ Responsible for creating a HTTP response given the output of a serializer.
 from __future__ import absolute_import, print_function
 
 from flask import current_app
-from invenio_records_rest.utils import set_headers_for_record_caching_and_concurrency
+
+from invenio_records_rest.utils import \
+    set_headers_for_record_caching_and_concurrency
 
 
 def record_responsify(serializer, mimetype):
@@ -31,7 +33,7 @@ def record_responsify(serializer, mimetype):
         )
         response.status_code = code
         set_headers_for_record_caching_and_concurrency(response, record)
-        
+
         if headers is not None:
             response.headers.extend(headers)
 
