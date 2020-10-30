@@ -166,10 +166,9 @@ class LazyPIDValue(object):
         except PIDRedirectedError as pid_error:
             try:
                 location = url_for(
-                    '.{0}_item'.format(
-                        current_records_rest.default_endpoint_prefixes[
-                            pid_error.destination_pid.pid_type]),
-                    pid_value=pid_error.destination_pid.pid_value)
+                    request.endpoint,
+                    pid_value=pid_error.destination_pid.pid_value
+                )
                 data = dict(
                     status=301,
                     message='Moved Permanently',
