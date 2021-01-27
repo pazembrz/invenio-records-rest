@@ -65,11 +65,11 @@ jobs:
           pip install twine wheel coveralls requirements-builder
 
       - name: Prepare normal requirements
-        if: steps.cache.outputs.cache-hit != 'true' && ${{ matrix.requirements-level != 'dev' }}
+        if: steps.cache.outputs.cache-hit != 'true' && matrix.requirements-level != 'dev'
         run: requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
 
       - name: Prepare devel requirements
-        if: steps.cache.outputs.cache-hit != 'true' && ${{ matrix.requirements-level == 'dev' }}
+        if: steps.cache.outputs.cache-hit != 'true' && matrix.requirements-level == 'dev'
         run: requirements-builder -e ${{ env.EXTRAS }} --level=dev --req requirements-devel.txt setup.py > .requirements.txt
 
       - name: Install dependencies
