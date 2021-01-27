@@ -40,6 +40,10 @@ jobs:
           discovery.type: single-node
         ports:
           - 9200:9200
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -77,9 +81,11 @@ jobs:
         run: pip install -r .requirements.txt
 
       - name: Install app
-        run: pip install .[all,${{ env.EXTRAS }}]
+        run: |
+          pip install .[all,${{ env.EXTRAS }}]
+          pip uninstall -y six
 
-      - name: Show python dependencies and clean 
+      - name: Show python dependencies and clean
         run: |
           pip freeze
           rm .requirements.txt
