@@ -9,6 +9,9 @@ on:
   pull_request:
     branches:
       - master
+env:
+  EXTRAS: elasticsearch7
+
 jobs:
   Test:
     runs-on: ubuntu-latest
@@ -27,7 +30,6 @@ jobs:
           POSTGRES_USER: inspirehep
           POSTGRES_PASSWORD: inspirehep
           POSTGRES_DB: inspirehep
-          EXTRAS: elasticsearch7
         ports:
           - 5432:5432
       elasticsearch:
@@ -54,7 +56,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.requirements-level }}-${{ hashFiles('setup.py') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.requirements-level }}-${{ hashFiles('setup.py', 'requirements-devel.txt') }}
 
       - name: Prepare python dependencies
         if: steps.cache.outputs.cache-hit != 'true'
