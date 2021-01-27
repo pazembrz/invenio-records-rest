@@ -58,9 +58,9 @@ jobs:
 
       - name: Prepare python dependencies
         run: |
-        pip install --upgrade pip setuptools py
-        pip install twine wheel coveralls requirements-builder
-        requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
+          pip install --upgrade pip setuptools py
+          pip install twine wheel coveralls requirements-builder
+          requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
 
       - name: Prepare devel requirements
         if: ${{ matrix.requirements-level == 'dev' }}
