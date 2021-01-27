@@ -54,23 +54,25 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('setup.py') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.requirements-level }}-${{ hashFiles('setup.py') }}
 
       - name: Prepare python dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install --upgrade pip setuptools py
           pip install twine wheel coveralls requirements-builder
           requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
 
       - name: Prepare devel requirements
-        if: ${{ matrix.requirements-level == 'dev' }}
+        if: steps.cache.outputs.cache-hit != 'true' && ${{ matrix.requirements-level == 'dev' }}
         run: requirements-builder -e ${{ env.EXTRAS }} --level=dev --req requirements-devel.txt setup.py > .requirements.txt
 
       - name: Install dependencies
-        run: pip install -r .requirements.txt"
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -r .requirements.txt
 
       - name: Install app
-        run: pip install -e .[all,${{ env.EXTRAS }}]
+        run: pip install .[all,${{ env.EXTRAS }}]
 
       - name: Show python dependencies
         run: pip freeze
