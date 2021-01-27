@@ -58,12 +58,15 @@ jobs:
           path: ${{ env.pythonLocation }}
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.requirements-level }}-${{ hashFiles('setup.py', 'requirements-devel.txt') }}
 
-      - name: Prepare python dependencies
+      - name: Prepare python env
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install --upgrade pip setuptools py
           pip install twine wheel coveralls requirements-builder
-          requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
+
+      - name: Prepare normal requirements
+        if: steps.cache.outputs.cache-hit != 'true' && ${{ matrix.requirements-level != 'dev' }}
+        run: requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
 
       - name: Prepare devel requirements
         if: steps.cache.outputs.cache-hit != 'true' && ${{ matrix.requirements-level == 'dev' }}
