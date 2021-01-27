@@ -76,7 +76,7 @@ jobs:
         run: pip freeze
 
       - name: Run tests
-          run: ./run-tests.sh
+        run: ./run-tests.sh
 
       - name: Coveralls
         uses: AndreMiras/coveralls-python-action@v20201129
