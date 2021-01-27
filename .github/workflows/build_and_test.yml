@@ -79,8 +79,10 @@ jobs:
       - name: Install app
         run: pip install .[all,${{ env.EXTRAS }}]
 
-      - name: Show python dependencies
-        run: pip freeze
+      - name: Show python dependencies and clean 
+        run: |
+          pip freeze
+          rm .requirements.txt
 
       - name: Run tests
         run: ./run-tests.sh
