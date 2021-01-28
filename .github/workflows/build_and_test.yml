@@ -83,7 +83,6 @@ jobs:
       - name: Install app
         run: |
           pip install .[all,${{ env.EXTRAS }}]
-          pip uninstall -y six
 
       - name: Show python dependencies and clean
         run: |
