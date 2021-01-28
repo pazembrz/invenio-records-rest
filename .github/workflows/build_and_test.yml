@@ -68,26 +68,19 @@ jobs:
           pip install --upgrade pip setuptools py
           pip install twine wheel coveralls requirements-builder
 
-      - name: Prepare normal requirements
-        if: steps.cache.outputs.cache-hit != 'true' && matrix.requirements-level != 'dev'
-        run: requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
-
-      - name: Prepare devel requirements
-        if: steps.cache.outputs.cache-hit != 'true' && matrix.requirements-level == 'dev'
-        run: requirements-builder -e ${{ env.EXTRAS }} --level=dev --req requirements-devel.txt setup.py > .requirements.txt
-
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install -r .requirements.txt
+        run: |
+          requirements-builder -e ${{ env.EXTRAS }} --level=${{ matrix.requirements-level }} setup.py > .requirements.txt
+          pip install -r .requirements.txt
+          rm .requirements.txt
 
       - name: Install app
         run: |
           pip install .[all,${{ env.EXTRAS }}]
 
       - name: Show python dependencies and clean
-        run: |
-          pip freeze
-          rm .requirements.txt
+        run: pip freeze
 
       - name: Run tests
         run: ./run-tests.sh
