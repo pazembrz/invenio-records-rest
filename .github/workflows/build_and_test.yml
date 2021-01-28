@@ -20,10 +20,6 @@ jobs:
         python-version: [ 3.6, 3.7, 3.8, 3.9 ]
         requirements-level: [min, pypi]
     services:
-#      redis:
-#        image: redis
-#        ports:
-#          - 6379:6379
       postgres:
         image: postgres:9.6
         env:
@@ -40,10 +36,6 @@ jobs:
           discovery.type: single-node
         ports:
           - 9200:9200
-#      rabbitmq:
-#        image: rabbitmq:3-management
-#        ports:
-#          - 5672:5672
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -60,7 +52,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.requirements-level }}-${{ hashFiles('setup.py', 'requirements-devel.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.requirements-level }}-${{ hashFiles('setup.py') }}
 
       - name: Prepare python env
         if: steps.cache.outputs.cache-hit != 'true'
